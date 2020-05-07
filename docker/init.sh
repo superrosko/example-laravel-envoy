@@ -3,15 +3,16 @@ DB_NEW_PASSWORD="password"
 DB_DATABASE="example-laravel-envoy-db"
 APP_NAME="example-laravel-envoy"
 
+APP_ENV="dev"
 DB_USER="root"
 DB_PASSWORD="password"
-DIR=$(dirname $0)
+DIR=$(dirname "$0")
 
 # Generate ssl crt
 openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 -subj \
     "/C=RU/ST=Moscow-State/L=Moscow/O=Developer/CN=localhost" \
-    -keyout $DIR/ssl/nginx-selfsigned.key -out $DIR/ssl/nginx-selfsigned.crt
-openssl dhparam -dsaparam -out $DIR/ssl/dhparam.pem 4096
+    -keyout "$DIR"/ssl/nginx-selfsigned.key -out "$DIR"/ssl/nginx-selfsigned.crt
+openssl dhparam -dsaparam -out "$DIR"/ssl/dhparam.pem 4096
 
 # Docker compose restart
 docker-compose down
@@ -39,7 +40,7 @@ docker-compose exec "$APP_NAME"-app php artisan migrate
 docker-compose exec "$APP_NAME"-app php artisan db:seed
 
 # Optimising installation
-docker-compose exec "$APP_NAME"-app php artisan clear-compiled --env={{$env}};
-docker-compose exec "$APP_NAME"-app php artisan optimize --env={{$env}};
-docker-compose exec "$APP_NAME"-app php artisan config:cache --env={{$env}};
-docker-compose exec "$APP_NAME"-app php artisan cache:clear --env={{$env}};
+docker-compose exec "$APP_NAME"-app php artisan clear-compiled --env="$APP_ENV"
+docker-compose exec "$APP_NAME"-app php artisan optimize --env="$APP_ENV"
+docker-compose exec "$APP_NAME"-app php artisan config:cache --env="$APP_ENV"
+docker-compose exec "$APP_NAME"-app php artisan cache:clear --env="$APP_ENV"
