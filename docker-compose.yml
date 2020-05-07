@@ -1,0 +1,88 @@
+version: '3'
+services:
+
+  #PHP Service
+  example-laravel-envoy-app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    image: superrosko/example-laravel-envoy
+    container_name: example-laravel-envoy-app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: example-laravel-envoy-app
+      SERVICE_TAGS: dev
+      XDEBUG_CONFIG: remote_host=winhost
+      PHP_IDE_CONFIG: serverName=example-laravel-envoy.localhost
+    working_dir: /var/www
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./:/var/www
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - internal
+
+  #Node Service
+  example-laravel-envoy-node:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    image: superrosko/node12.16-alpine
+    container_name: example-laravel-envoy-node
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - internal
+
+  #Nginx Service
+  example-laravel-envoy-nginx:
+    image: nginx:alpine
+    container_name: example-laravel-envoy-nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/ssl/:/etc/nginx/ssl/
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/nginx/configs/:/etc/nginx/configs/
+    networks:
+      - internal
+
+  #MySQL Service
+  example-laravel-envoy-mysql:
+    image: mysql:5.7.30
+    container_name: example-laravel-envoy-mysql
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: example-laravel-envoy-db
+      MYSQL_ROOT_PASSWORD: password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - internal
+
+#Docker Volumes
+volumes:
+  mysql-data:
+    driver: local
+
+#Docker Networks
+networks:
+  internal:
+    driver: bridge
