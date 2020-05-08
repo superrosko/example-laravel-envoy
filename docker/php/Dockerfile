@@ -1,9 +1,6 @@
 FROM php:7.4-fpm
 MAINTAINER Dmitriy Bespalov <dbespalov.rosko@gmail.com>
 
-# Set working directory
-WORKDIR /var/www
-
 # Set timezone
 ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -11,51 +8,102 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libcurl4-openssl-dev \
-    libsqlite3-dev \
-    libicu-dev \
-    libmpc-dev \
-    libzip-dev \
-    libpng-dev \
-    libssl-dev \
-    libmemcached-dev \
-    librabbitmq-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
     locales \
-    zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    unzip \
+    zip unzip \
     git \
     curl
 
+# PHP Extensions
+RUN docker-php-ext-install pdo_mysql
+
+RUN apt-get update \
+    && apt-get install -y \
+        libpng-dev \
+        libpq-dev \
+        libpq5 \
+    && docker-php-ext-configure pdo_pgsql \
+    && docker-php-ext-install -j$(nproc) \
+        pdo_pgsql \
+    && apt-get purge -y \
+        libpng-dev \
+        libpq-dev
+
+RUN apt-get update \
+    && apt-get install -y \
+        libfreetype6-dev \
+        libpng-dev \
+        libjpeg-dev \
+        libfreetype6 \
+        libpng16-16 \
+        libjpeg62 \
+    && docker-php-ext-configure gd \
+        --with-freetype \
+        --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+        gd \
+    && apt-get purge -y \
+        libfreetype6-dev \
+        libpng-dev \
+        libjpeg-dev
+
+RUN apt-get update \
+    && apt-get install -y \
+        libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install -j$(nproc) \
+        intl \
+    && apt-get purge -y \
+        libicu-dev
+        
+RUN docker-php-ext-install bcmath
+
+RUN apt-get update \
+    && apt-get install -y \
+        libmpc-dev \
+    && docker-php-ext-configure gmp \
+    && docker-php-ext-install -j$(nproc) \
+        gmp \
+    && apt-get purge -y \
+        libmpc-dev
+        
+RUN apt-get update \
+    && apt-get install -y \
+        libzip-dev \
+        libzip4 \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install -j$(nproc) \
+        zip \
+    && apt-get purge -y \
+        libzip-dev
+
+RUN docker-php-ext-install pcntl
+
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
+RUN pecl install mongodb && docker-php-ext-enable mongodb
+
+RUN apt-get update \
+    && apt-get install -y \
+        libmemcached-dev \
+        libmemcached11 \
+        libmemcached-tools \
+    && pecl install memcached \
+    && docker-php-ext-enable memcached \
+    && apt-get purge -y \
+        libmemcached-dev
+        
+RUN apt-get update \
+    && apt-get install -y \
+        librabbitmq-dev \
+        librabbitmq4 \
+    && pecl install amqp \
+    && docker-php-ext-enable amqp \
+    && apt-get purge -y \
+        librabbitmq-dev
+
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# PHP Extensions
-RUN docker-php-ext-install pdo_mysql pdo_sqlite intl bcmath gmp zip pcntl gd
-RUN pecl install xdebug && docker-php-ext-enable xdebug
-RUN pecl install mongodb && docker-php-ext-enable mongodb
-RUN pecl install memcached && docker-php-ext-enable memcached
-RUN pecl install amqp && docker-php-ext-enable amqp
+RUN apt-get autoremove -y
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Add user for laravel application
-RUN groupadd -g 1000 www-user
-RUN useradd -u 1000 -ms /bin/bash -g www-user www-user
-
-# Copy existing application directory contents
-COPY . /var/www
-
-# Copy existing application directory permissions
-COPY --chown=www-user:www-user . /var/www
-
-# Change current user to www-user
-USER www-user
-
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000 9001
-CMD ["php-fpm"]

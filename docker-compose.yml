@@ -2,10 +2,23 @@ version: '3'
 services:
 
   #PHP Service
-  example-laravel-envoy-app:
+  example-laravel-envoy-php:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+    image: superrosko/php7.4-fpm
+    container_name: example-laravel-envoy-php
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: example-laravel-envoy-php
+      SERVICE_TAGS: dev
+
+  #App Service
+  example-laravel-envoy-app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
     image: superrosko/example-laravel-envoy
     container_name: example-laravel-envoy-app
     restart: unless-stopped
