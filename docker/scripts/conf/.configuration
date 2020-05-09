@@ -1,0 +1,17 @@
+# shellcheck disable=SC2034
+DIR=$( cd "$(dirname "$0")" && pwd )
+
+# APP Configuration
+APP_NAME="example-laravel-envoy"
+APP_ENV="dev"
+
+# DATABASE Configuration
+DB_NEW_USER="example-laravel-envoy-user"
+DB_NEW_PASSWORD="password"
+DB_DATABASE="example-laravel-envoy-db"
+
+# SSL Configuration
+SSL_DIR="$DIR/../ssl"
+SSL_HOST="localhost"
+SSL_BITS=4096
+SSL_EXPIRED=3650

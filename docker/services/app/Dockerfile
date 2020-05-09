@@ -14,6 +14,9 @@ COPY --chown=www-user:www-user . /var/www
 # Change current user to www-user
 USER www-user
 
+# Install envoy for deploy
+RUN composer global require laravel/envoy
+
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]
