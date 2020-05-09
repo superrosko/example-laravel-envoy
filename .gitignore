@@ -11,11 +11,20 @@ node_modules/
 .idea
 
 # Laravel
+/public/*.map
 /public/hot
+/public/js/*
+/public/css/*
+/public/images
+/public/favicon
+/public/fonts
+/public/service-worker.js
+/public/favicon.ico
+/public/mix-manifest.json
 /public/storage
 /storage/*.key
+/storage/debugbar/
 .env
-.env.backup
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
