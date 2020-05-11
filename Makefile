@@ -10,6 +10,8 @@ app_config:
 	./docker/scripts/app_config.sh
 db_create_user:
 	./docker/scripts/db_create_user.sh
+db_exec:
+	./docker/scripts/db_exec.sh
 db_migration:
 	./docker/scripts/db_migration.sh
 db_migration_reset:
