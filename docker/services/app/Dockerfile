@@ -1,4 +1,4 @@
-FROM superrosko/php7.4-fpm
+FROM superrosko/php:7.4-fpm
 MAINTAINER Dmitriy Bespalov <dbespalov.rosko@gmail.com>
 
 # Set working directory
