@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: docker/services/php/Dockerfile
-    image: superrosko/php7.4-fpm
+    image: superrosko/php:7.4-fpm
     container_name: example-laravel-envoy-php
     restart: unless-stopped
     tty: true
@@ -35,8 +35,8 @@ services:
       - "9000:9000"
     volumes:
       - ./:/var/www
-      - ./docker/services/php/conf/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-      - ./docker/services/php/conf/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./docker/services/app/conf/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./docker/services/app/conf/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - internal
     depends_on:
@@ -90,7 +90,7 @@ services:
       MYSQL_DATABASE: example-laravel-envoy-db
       MYSQL_ROOT_PASSWORD: password
       SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      SERVICE_NAME: example-laravel-envoy-mysql
     volumes:
       - mysql-data:/var/lib/mysql
       - ./docker/services/mysql/conf/my.cnf:/etc/mysql/my.cnf
