@@ -48,7 +48,7 @@ services:
     build:
       context: .
       dockerfile: docker/services/node/Dockerfile
-    image: superrosko/node12.16-alpine
+    image: superrosko/node:12.16-alpine
     container_name: example-laravel-envoy-node
     restart: unless-stopped
     tty: true
