@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     curl
 
 # PHP Extensions
+RUN docker-php-ext-install opcache
 RUN docker-php-ext-install pdo_mysql
 
 RUN apt-get update \
@@ -54,7 +55,7 @@ RUN apt-get update \
         intl \
     && apt-get purge -y \
         libicu-dev
-        
+
 RUN docker-php-ext-install bcmath
 
 RUN apt-get update \
@@ -65,7 +66,7 @@ RUN apt-get update \
         gmp \
     && apt-get purge -y \
         libmpc-dev
-        
+
 RUN apt-get update \
     && apt-get install -y \
         libzip-dev \
@@ -91,7 +92,7 @@ RUN apt-get update \
     && docker-php-ext-enable memcached \
     && apt-get purge -y \
         libmemcached-dev
-        
+
 RUN apt-get update \
     && apt-get install -y \
         librabbitmq-dev \
@@ -100,6 +101,11 @@ RUN apt-get update \
     && docker-php-ext-enable amqp \
     && apt-get purge -y \
         librabbitmq-dev
+
+RUN apt-get update \
+    && apt-get install -y \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
