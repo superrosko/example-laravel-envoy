@@ -79,7 +79,7 @@ git clone git@github.com:superrosko/example-laravel-envoy.git .
 
 #### Run initialization
 ```bash
-make init
+make initial
 ```
 
 ## Usage
@@ -124,7 +124,7 @@ make db_migration_reset
 ```
 App initialization: 
 ```bash
-make init
+make initial
 ```
 Deploy app:
 ```bash

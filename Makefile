@@ -16,7 +16,7 @@ db_migration:
 	./docker/scripts/db_migration.sh
 db_migration_reset:
 	./docker/scripts/db_migration_reset.sh
-init:
-	./docker/scripts/init.sh
+initial:
+	./docker/scripts/initial.sh
 deploy:
 	./docker/scripts/deploy.sh
