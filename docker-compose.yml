@@ -28,7 +28,7 @@ services:
     environment:
       SERVICE_NAME: example-laravel-envoy-app
       SERVICE_TAGS: dev
-      XDEBUG_CONFIG: remote_host=winhost
+      XDEBUG_CONFIG: $XDEBUG_CONFIG
       PHP_IDE_CONFIG: serverName=example-laravel-envoy.localhost
     working_dir: /var/www
     ports:
