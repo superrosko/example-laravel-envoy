@@ -16,6 +16,8 @@ db_migration:
 	./docker/scripts/db_migration.sh
 db_migration_reset:
 	./docker/scripts/db_migration_reset.sh
+php_exec:
+	./docker/scripts/php_exec.sh
 initial:
 	./docker/scripts/initial.sh
 deploy:
