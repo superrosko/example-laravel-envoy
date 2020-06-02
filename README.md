@@ -126,6 +126,10 @@ App php exec:
 ```bash
 make php_exec COMMAND="artisan"
 ```
+App bash exec: 
+```bash
+make bash_exec
+```
 App initialization: 
 ```bash
 make initial
