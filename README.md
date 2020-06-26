@@ -153,7 +153,7 @@ The MIT License (MIT). Please see [License File][link-license] for more informat
 [link-contributors]: https://github.com/superrosko/example-laravel-envoy/contributors
 [link-github]: https://github.com/superrosko/example-laravel-envoy
 [link-github-tag-version]: https://github.com/superrosko/example-laravel-envoy
-[link-license]: LICENSE
+[link-license]: LICENSE.md
 
 [ico-github-size]: https://img.shields.io/github/languages/code-size/superrosko/example-laravel-envoy.svg?style=flat
 [ico-github-top-language]: https://img.shields.io/github/languages/top/superrosko/example-laravel-envoy.svg?style=flat
