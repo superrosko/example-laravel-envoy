@@ -8,15 +8,15 @@
     $timezone = 'Europe/Moscow';
     $date = new datetime('now', new DateTimeZone($timezone));
 
-    if(!($authUser = getenv('DEPLOY_USER'))) { throw new Exception('--DEPLOY_USER must be specified'); }
-    if(!($authKey = getenv('DEPLOY_USER_KEY'))) { throw new Exception('--DEPLOY_USER_KEY must be specified'); }
-    if(!($authServer = getenv('DEPLOY_SERVER'))) { throw new Exception('--DEPLOY_SERVER must be specified'); }
+    if(!($authUser = $_ENV['DEPLOY_USER'] ?? false)) { throw new Exception('--DEPLOY_USER must be specified'); }
+    if(!($authKey = $_ENV['DEPLOY_USER_KEY'] ?? false)) { throw new Exception('--DEPLOY_USER_KEY must be specified'); }
+    if(!($authServer = $_ENV['DEPLOY_SERVER'] ?? false)) { throw new Exception('--DEPLOY_SERVER must be specified'); }
 
     $gitBranch = 'master';
-    if(!($gitRepository = getenv('DEPLOY_REPOSITORY'))) { throw new Exception('--DEPLOY_REPOSITORY must be specified'); }
+    if(!($gitRepository = $_ENV['DEPLOY_REPOSITORY'] ?? false)) { throw new Exception('--DEPLOY_REPOSITORY must be specified'); }
 
 
-    if(!($dirBase = getenv('DEPLOY_PATH'))) { throw new Exception('--DEPLOY_PATH must be specified'); }
+    if(!($dirBase = $_ENV['DEPLOY_PATH'] ?? false)) { throw new Exception('--DEPLOY_PATH must be specified'); }
     $dirShared = $dirBase . '/shared';
     $dirCurrent = $dirBase . '/current';
     $dirReleases = $dirBase . '/releases';
