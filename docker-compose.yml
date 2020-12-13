@@ -1,21 +1,6 @@
 version: '3'
 services:
 
-  #PHP Service
-  example-laravel-envoy-php:
-    build:
-      context: .
-      dockerfile: docker/services/php/Dockerfile
-    image: superrosko/php:7.4-fpm
-    container_name: example-laravel-envoy-php
-    restart: unless-stopped
-    tty: true
-    environment:
-      SERVICE_NAME: example-laravel-envoy-php
-      SERVICE_TAGS: dev
-    networks:
-      - internal
-
   #App Service
   example-laravel-envoy-app:
     build:
@@ -40,15 +25,11 @@ services:
     networks:
       - internal
     depends_on:
-      - example-laravel-envoy-php
       - example-laravel-envoy-mysql
 
   #Node Service
   example-laravel-envoy-node:
-    build:
-      context: .
-      dockerfile: docker/services/node/Dockerfile
-    image: superrosko/node:12.16-alpine
+    image: superrosko/node:14.15.1-alpine
     container_name: example-laravel-envoy-node
     restart: unless-stopped
     tty: true
@@ -80,10 +61,11 @@ services:
 
   #MySQL Service
   example-laravel-envoy-mysql:
-    image: mysql:5.7.30
+    image: mysql:8.0
     container_name: example-laravel-envoy-mysql
     restart: unless-stopped
     tty: true
+    cap_add: [ SYS_NICE ]
     ports:
       - "3306:3306"
     environment:
@@ -93,7 +75,7 @@ services:
       SERVICE_NAME: example-laravel-envoy-mysql
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./docker/services/mysql/conf/my.cnf:/etc/mysql/my.cnf
+      - ./docker/services/mysql/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
       - ./docker/services/mysql/conf/config.cnf:/etc/mysql/config.cnf
     networks:
       - internal
